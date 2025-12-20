@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function ListInput({ students, setStudents }) {
+function ListInput({ addStudent }) {
   const [name, setName] = useState("");
 
   console.log("list input running");
@@ -9,15 +9,15 @@ function ListInput({ students, setStudents }) {
   const handleInputChange = (event) => {
     setName(event.target.value);
   };
-  const handleAdd = () => {
-    console.log(name);
 
+  const handleSubmit = () => {
     const newStudent = {
       id: crypto.randomUUID(),
       name,
     };
-    setStudents([...students, newStudent]);
+    addStudent(newStudent);
   };
+
   return (
     <>
       <input
@@ -25,7 +25,7 @@ function ListInput({ students, setStudents }) {
         placeholder="Enter your name"
         onChange={handleInputChange}
       />
-      <button onClick={handleAdd}>Add</button>
+      <button onClick={handleSubmit}>Add</button>
     </>
   );
 }

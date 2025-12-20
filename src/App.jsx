@@ -12,10 +12,18 @@ function App() {
     { id: "arn", name: "Arun" },
     { id: "jsh", name: "Jinshi" },
   ]);
+
+  const addStudent = (newStudent) => {
+    setStudents([...students, newStudent]);
+  };
+
+  const deleteStudent = (studentId) => {
+    setStudents((prev) => prev.filter((std) => std.id !== studentId));
+  };
   return (
     <>
-      <ListInput students={students} setStudents={setStudents} />
-      <ListData students={students} />
+      <ListInput addStudent={addStudent} />
+      <ListData students={students} deleteStudent={deleteStudent} />
     </>
   );
 }
