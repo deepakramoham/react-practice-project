@@ -46,14 +46,6 @@ function App() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const filteredStudents = studentData?.filter((student) =>
-      student?.name?.toLowerCase().includes(search.toLowerCase())
-    );
-
-    setStudents(filteredStudents);
-  }, [search]);
-
-  useEffect(() => {
     nameRef.current.focus();
   }, []);
 
@@ -78,7 +70,12 @@ function App() {
             />
           </div>
           <div className="contacts">
-            <ListData students={students} deleteStudent={deleteStudent} />
+            <ListData
+              students={students?.filter((student) =>
+                student?.name?.toLowerCase().includes(search.toLowerCase())
+              )}
+              deleteStudent={deleteStudent}
+            />
           </div>
         </div>
       </div>
