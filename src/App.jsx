@@ -40,7 +40,16 @@ function App() {
     { id: "sanj", name: "Sanjay", contact: 99890123 },
     { id: "kate", name: "Kate", contact: 99901234 },
     { id: "joel", name: "Joel", contact: 98112244 },
-  ];
+  ]?.sort((a, b) => a?.name?.localeCompare(b?.name));
+
+  // const nums = [5, 9, 1, 3, 100, 1100, 4, 0];
+  // console.log(nums?.sort((a, b) => a - b));
+  // console.log(nums?.sort((a, b) => b - a));
+
+  // const names = ["arun", "varun", "Karun", "Abhi", "Arun"];
+
+  // console.log(names?.sort((a, b) => a.localeCompare(b)));
+  // console.log(names?.sort());
 
   const [students, setStudents] = useState(studentData);
   const [search, setSearch] = useState("");
@@ -50,7 +59,9 @@ function App() {
   }, []);
 
   const addStudent = (newStudent) => {
-    setStudents([...students, newStudent]);
+    setStudents(
+      [newStudent, ...students]?.sort((a, b) => a?.name?.localeCompare(b?.name))
+    );
   };
 
   const deleteStudent = (studentId) => {
