@@ -1,12 +1,27 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { IoAdd } from "react-icons/io5";
+import { AppContext } from "../context/AppContextProvider";
+import { useContext } from "react";
 
-const ListInput = ({ addStudent, nameRef, search, setSearch }) => {
+const ListInput = () => {
+  console.log("listInput rendered")
+  const nameRef = useRef(null);
   const contactRef = useRef(null);
-
+  const { students, setStudents, search, setSearch } = useContext(AppContext);
   const [name, setName] = useState("");
+
+  useEffect(() => {
+    nameRef.current.focus();
+  }, []);
 
   const handleInputChange = (event) => {
     setName(event.target.value);
+  };
+
+  const addStudent = (newStudent) => {
+    setStudents(
+      [newStudent, ...students]?.sort((a, b) => a?.name?.localeCompare(b?.name))
+    );
   };
 
   const handleSubmit = () => {
@@ -46,7 +61,9 @@ const ListInput = ({ addStudent, nameRef, search, setSearch }) => {
           </div>
 
           <div className="list-add-button">
-            <button onClick={handleSubmit}>Add</button>
+            <button onClick={handleSubmit}>
+              <IoAdd />
+            </button>
           </div>
         </div>
 
