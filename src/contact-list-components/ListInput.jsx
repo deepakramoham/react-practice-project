@@ -3,6 +3,7 @@ import { IoAdd } from "react-icons/io5";
 import { AppContext } from "../context/AppContextProvider";
 import { useContext } from "react";
 import Input from "../components/Input";
+import Modal from "../components/Modal";
 
 const ListInput = () => {
   console.log("listInput rendered");
@@ -14,9 +15,13 @@ const ListInput = () => {
   });
   const [formErrors, setFormErrors] = useState({});
 
+  const [modalOpen, setModalOpen] = useState(false);
+
   useEffect(() => {
-    nameRef.current.focus();
-  }, []);
+    if (modalOpen) {
+      nameRef?.current?.focus();
+    }
+  }, [modalOpen]);
 
   const handleInputChange = useCallback((event) => {
     const { name, value } = event.target;
@@ -37,6 +42,7 @@ const ListInput = () => {
   };
 
   const resetStates = () => {
+    setModalOpen(!modalOpen);
     setFormErrors({});
     setFormValues({
       name: "",
@@ -57,42 +63,36 @@ const ListInput = () => {
 
   const handleSubmit = () => {
     if (validateFormValues()) {
-      console.log("submitted");
       const newStudent = {
         id: crypto.randomUUID(),
         ...formValues,
       };
       addStudent(newStudent);
-      nameRef.current.focus();
       resetStates();
     }
   };
 
   const handleSearch = useCallback((e) => setSearch(e.target.value), []);
 
+  const handleClose = () => setModalOpen(!modalOpen);
+
   return (
     <>
-      <div className="contact-collector">
-        <div className="list-input-section">
-          <div className="list-input-container">
-            <div className="list-input">
+      {modalOpen && (
+        <Modal
+          modalTitle={"Add Contact"}
+          modalBody={
+            <div className="p-2">
               <Input
-                name={"name"}
                 ref={nameRef}
-                className={"my-input"}
+                name={"name"}
+                className={"my-input mb-4"}
                 value={formValues?.name || ""}
                 placeholder={"Enter your name"}
                 onChange={handleInputChange}
                 error={formErrors?.name}
               />
-              {/* <input
-              ref={nameRef}
-              className="my-input"
-              value={name}
-              placeholder="Enter your name"
-              onChange={handleInputChange}
-            />
-            <small>{nameError}</small> */}
+
               <Input
                 name={"contact"}
                 value={formValues?.contact || ""}
@@ -101,23 +101,39 @@ const ListInput = () => {
                 error={formErrors?.contact}
               />
             </div>
+          }
+          handleSave={handleSubmit}
+          handleClose={handleClose}
+          SaveButtonText={"Save"}
+          CloseButtonText={"cancel"}
+        />
+      )}
 
-            <div className="list-add-button">
-              <button onClick={handleSubmit}>
-                <IoAdd />
-              </button>
-            </div>
-          </div>
-
-          <div className="list-search">
-            <Input
-              name={"search"}
-              placeholder="Search . . . "
-              type="text"
-              value={search}
-              onChange={handleSearch}
-            />
-          </div>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "5px",
+        }}
+      >
+        <div style={{ width: "100%" }}>
+          <Input
+            name={"search"}
+            placeholder="Search . . . "
+            type="text"
+            value={search}
+            onChange={handleSearch}
+          />
+        </div>
+        <div className="p-2">
+          <button
+            className="btn btn-success"
+            onClick={() => setModalOpen(!modalOpen)}
+          >
+            <IoAdd style={{ fontSize: "2em" }} />
+          </button>
         </div>
       </div>
     </>

@@ -3,7 +3,7 @@ import { useContext } from "react";
 import { AppContext } from "../context/AppContextProvider";
 
 function ListItem({ student }) {
-  console.log("listItem rendered")
+  console.log("listItem rendered");
   const { setStudents } = useContext(AppContext);
 
   const deleteStudent = (studentId) => {
@@ -19,10 +19,10 @@ function ListItem({ student }) {
       </div>
       <div className="delete-button-div">
         <button
-          className="delete-button"
+          className="btn btn-danger"
           onClick={() => deleteStudent(student?.id)}
         >
-          <RiDeleteBin6Line />
+          <RiDeleteBin6Line style={{ fontSize: "2em" }} />
         </button>
       </div>
     </div>
