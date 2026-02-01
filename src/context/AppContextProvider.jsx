@@ -1,7 +1,35 @@
 import { useState } from "react";
-import { createContext } from "react";
+
+import { createContext, useReducer } from "react";
 
 export const AppContext = createContext();
+const appReducer = (state, action) => {
+  switch (action.type) {
+    case "SET_STUDENTS":
+      return {
+    ...state,
+    students: [action.payload, ...state.students].sort(
+      (a, b) => a.name.localeCompare(b.name)
+    ),
+  };
+
+    case "SET_SEARCH":
+      return {
+        ...state,
+        search: action.payload,
+      };
+case "DELETE_STUDENT":
+  return {
+    ...state,
+    students: state.students.filter(
+      (std) => std.id !== action.payload
+    ),
+  };
+
+    default:
+      return state;
+  }
+};
 
 const AppContextProvider = ({ children }) => {
   console.log("appContextProvider rendered");
@@ -42,11 +70,20 @@ const AppContextProvider = ({ children }) => {
     { id: "joel", name: "Joel", contact: 98112244 },
   ]?.sort((a, b) => a?.name?.localeCompare(b?.name));
 
-  const [students, setStudents] = useState(studentData);
-  const [search, setSearch] = useState("");
-
-  return (
-    <AppContext.Provider value={{ students, setStudents, search, setSearch }}>
+  //const [students, setStudents] = useState(studentData);
+  //const [search, setSearch] = useState("");
+ const [state, dispatch] = useReducer(appReducer, {
+    students: studentData,
+    search: "",
+  });
+   return (
+    <AppContext.Provider
+      value={{
+        students: state.students,
+        search: state.search,
+        dispatch,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

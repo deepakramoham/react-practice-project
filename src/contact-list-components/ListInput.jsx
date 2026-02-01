@@ -3,13 +3,15 @@ import { IoAdd } from "react-icons/io5";
 import { AppContext } from "../context/AppContextProvider";
 import { useContext } from "react";
 
+
+
 const ListInput = () => {
   console.log("listInput rendered")
   const nameRef = useRef(null);
   const contactRef = useRef(null);
   const { students, setStudents, search, setSearch } = useContext(AppContext);
   const [name, setName] = useState("");
-
+const { dispatch } = useContext(AppContext);
   useEffect(() => {
     nameRef.current.focus();
   }, []);
@@ -18,11 +20,15 @@ const ListInput = () => {
     setName(event.target.value);
   };
 
-  const addStudent = (newStudent) => {
+  /*const addStudent = (newStudent) => {
     setStudents(
       [newStudent, ...students]?.sort((a, b) => a?.name?.localeCompare(b?.name))
     );
-  };
+  };*/
+  const addStudent = (newStudent) => {
+  dispatch({ type: "SET_STUDENTS", payload: newStudent });
+};
+
 
   const handleSubmit = () => {
     const contact = contactRef.current.value;
@@ -38,6 +44,7 @@ const ListInput = () => {
       contactRef.current.value = "";
       nameRef.current.focus();
     }
+    console.log("HANDLE SUBMIT")
   };
 
   return (
@@ -72,7 +79,8 @@ const ListInput = () => {
             placeholder="Search . . . "
             type="text"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            //onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) =>dispatch({ type: "SET_SEARCH", payload: e.target.value })}
           />
         </div>
       </div>
