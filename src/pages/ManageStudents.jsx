@@ -6,9 +6,10 @@ import Input from "../components/Input";
 import Modal from "../components/Modal";
 import RadioButton from "../components/RadioButton";
 import CheckBox from "../components/CheckBox";
+import Dropdown from "../components/Dropdown";
+import Table from "../components/Table";
 
-const ListInput = () => {
-  console.log("listInput rendered");
+const ManageStudents = () => {
   const nameRef = useRef(null);
   const { students, setStudents, search, setSearch } = useContext(AppContext);
   const [formValues, setFormValues] = useState({
@@ -26,9 +27,7 @@ const ListInput = () => {
   }, [modalOpen]);
 
   const handleInputChange = useCallback((event) => {
-    const { name, value, type, checked } = event.target;
-
-    console.log(name, value, type, checked);
+    const { name, value, type, checked, selectedOptions } = event.target;
     if (type === "checkbox") {
       console.log(event.target);
       if (checked) {
@@ -42,7 +41,10 @@ const ListInput = () => {
           [name]: prev[name]?.filter((v) => v !== value),
         }));
       }
-    } else {
+    } /* else if (type === "select-multiple") {
+      const selectedOpt = Array.from(selectedOptions)?.map((opt) => opt.value);
+      setFormValues((prev) => ({ ...prev, [name]: selectedOpt }));
+    } */ else {
       setFormValues((prev) => ({ ...prev, [name]: value }));
       setFormErrors((prev) => ({
         ...prev,
@@ -94,6 +96,7 @@ const ListInput = () => {
 
   const handleClose = () => setModalOpen(!modalOpen);
 
+
   return (
     <>
       {modalOpen && (
@@ -101,23 +104,27 @@ const ListInput = () => {
           modalTitle={"Add Contact"}
           modalBody={
             <div className="p-2">
-              <Input
-                ref={nameRef}
-                name={"name"}
-                className={"my-input mb-4"}
-                value={formValues?.name || ""}
-                placeholder={"Enter your name"}
-                onChange={handleInputChange}
-                error={formErrors?.name}
-              />
+              <div className="mb-2">
+                <Input
+                  ref={nameRef}
+                  name={"name"}
+                  className={"my-input mb-4"}
+                  value={formValues?.name || ""}
+                  placeholder={"Enter your name"}
+                  onChange={handleInputChange}
+                  error={formErrors?.name}
+                />
+              </div>
 
-              <Input
-                name={"contact"}
-                value={formValues?.contact || ""}
-                onChange={handleInputChange}
-                placeholder="Contact Number . . ."
-                error={formErrors?.contact}
-              />
+              <div className="mb-2">
+                <Input
+                  name={"contact"}
+                  value={formValues?.contact || ""}
+                  onChange={handleInputChange}
+                  placeholder="Contact Number . . ."
+                  error={formErrors?.contact}
+                />
+              </div>
 
               <div>
                 <RadioButton
@@ -132,7 +139,7 @@ const ListInput = () => {
                 />
               </div>
 
-              <div>
+              <div className="mb-2">
                 <CheckBox
                   name={"skills"}
                   label={"Skills"}
@@ -140,6 +147,20 @@ const ListInput = () => {
                     { label: "HTML", value: "html" },
                     { label: "CSS", value: "css" },
                     { label: "Javascript", value: "javascript" },
+                  ]}
+                  handleInputChange={handleInputChange}
+                />
+              </div>
+
+              <div className="mb-2">
+                <Dropdown
+                  name={"course"}
+                  label={"Courses"}
+                  options={[
+                    { label: "HTML", value: "html" },
+                    { label: "CSS", value: "css" },
+                    { label: "Javascript", value: "javascript" },
+                    { label: "React", value: "react" },
                   ]}
                   handleInputChange={handleInputChange}
                 />
@@ -180,8 +201,19 @@ const ListInput = () => {
           </button>
         </div>
       </div>
+
+      <Table
+        tableColumns={[
+          { header: "Name", accessor: "name" },
+          { header: "Contact", accessor: "contact" },
+          { header: "Gender", accessor: "gender" },
+          { header: "Skills", accessor: "skills" },
+          { header: "Course", accessor: "course" },
+        ]}
+        data={students}
+      />
     </>
   );
 };
 
-export default ListInput;
+export default ManageStudents;
