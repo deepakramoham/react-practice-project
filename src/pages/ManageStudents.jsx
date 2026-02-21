@@ -12,10 +12,16 @@ import Table from "../components/Table";
 const ManageStudents = () => {
   const nameRef = useRef(null);
   const { students, setStudents } = useContext(AppContext);
-  const [formValues, setFormValues] = useState({
+/*   const [formValues, setFormValues] = useState({
     name: "",
     contact: "",
-  });
+  }); */
+  const [formValues, setFormValues] = useState({
+  id: null,
+  name: "",
+  contact: "",
+});
+
   const [formErrors, setFormErrors] = useState({});
 
   const [tableData, setTableData] = useState([]);
@@ -40,7 +46,13 @@ const ManageStudents = () => {
     setFormValues(updateStudent);
   };
 
-  const handleDelete = (student) => {};
+ const handleDelete = (id) => {
+  const filteredStudents = students.filter(
+    (student) => student.id !== id
+  );
+
+  setStudents(filteredStudents);
+};
 
   useEffect(() => {
     if (modalOpen) {
@@ -103,7 +115,7 @@ const ManageStudents = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSubmit = () => {
+ /*  const handleSubmit = () => {
     if (validateFormValues()) {
       const newStudent = {
         id: crypto.randomUUID(),
@@ -113,7 +125,29 @@ const ManageStudents = () => {
       resetStates();
     }
   };
+ */
+const handleSubmit = () => {
+  if (validateFormValues()) {
+    if (formValues.id) {
+      // 🔁 UPDATE EXISTING STUDENT
+      const updatedStudents = students.map((student) =>
+        student.id === formValues.id ? formValues : student
+      );
 
+      setStudents(updatedStudents);
+    } else {
+      // ➕ ADD NEW STUDENT
+      const newStudent = {
+        id: crypto.randomUUID(),
+        ...formValues,
+      };
+
+      addStudent(newStudent);
+    }
+
+    resetStates();
+  }
+};
   const handleAdd = () => {
     setModalOpen(true);
   };
