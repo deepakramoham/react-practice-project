@@ -11,16 +11,15 @@ import Table from "../components/Table";
 
 const ManageStudents = () => {
   const nameRef = useRef(null);
-  const { students, setStudents } = useContext(AppContext);
-/*   const [formValues, setFormValues] = useState({
+  const { students, dispatch } = useContext(AppContext);
+  /*   const [formValues, setFormValues] = useState({
     name: "",
     contact: "",
   }); */
   const [formValues, setFormValues] = useState({
-  id: null,
-  name: "",
-  contact: "",
-});
+    name: "",
+    contact: "",
+  });
 
   const [formErrors, setFormErrors] = useState({});
 
@@ -46,13 +45,9 @@ const ManageStudents = () => {
     setFormValues(updateStudent);
   };
 
- const handleDelete = (id) => {
-  const filteredStudents = students.filter(
-    (student) => student.id !== id
-  );
-
-  setStudents(filteredStudents);
-};
+  const handleDelete = (id) => {
+    dispatch({ type: "DELETE_STUDENT", payload: id });
+  };
 
   useEffect(() => {
     if (modalOpen) {
@@ -87,14 +82,6 @@ const ManageStudents = () => {
     }
   }, []);
 
-  const addStudent = (newStudent) => {
-    setStudents(
-      [newStudent, ...students]?.sort((a, b) =>
-        a?.name?.localeCompare(b?.name),
-      ),
-    );
-  };
-
   const resetStates = () => {
     setModalOpen(!modalOpen);
     setFormErrors({});
@@ -115,39 +102,21 @@ const ManageStudents = () => {
     return Object.keys(errors).length === 0;
   };
 
- /*  const handleSubmit = () => {
+  const handleSubmit = () => {
     if (validateFormValues()) {
-      const newStudent = {
-        id: crypto.randomUUID(),
-        ...formValues,
-      };
-      addStudent(newStudent);
+      if (formValues.id) {
+        dispatch({ type: "UPDATE_STUDENT", payload: formValues });
+      } else {
+        const newStudent = {
+          id: crypto.randomUUID(),
+          ...formValues,
+        };
+        dispatch({ type: "SET_STUDENTS", payload: newStudent });
+      }
+
       resetStates();
     }
   };
- */
-const handleSubmit = () => {
-  if (validateFormValues()) {
-    if (formValues.id) {
-      // 🔁 UPDATE EXISTING STUDENT
-      const updatedStudents = students.map((student) =>
-        student.id === formValues.id ? formValues : student
-      );
-
-      setStudents(updatedStudents);
-    } else {
-      // ➕ ADD NEW STUDENT
-      const newStudent = {
-        id: crypto.randomUUID(),
-        ...formValues,
-      };
-
-      addStudent(newStudent);
-    }
-
-    resetStates();
-  }
-};
   const handleAdd = () => {
     setModalOpen(true);
   };

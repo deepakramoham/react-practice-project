@@ -5,15 +5,7 @@ import { useEffect, useState } from "react";
 const Table = ({ tableColumns, data, onAddClick }) => {
   const [search, setSearch] = useState("");
   const [filteredData, setFilteredData] = useState([]);
-
-  const columnData = [
-    { header: "Name", accessor: "name" },
-    { header: "Contact", accessor: "contact" },
-    { header: "Gender", accessor: "gender" },
-    { header: "Skills", accessor: "skills" },
-    { header: "Course", accessor: "course" },
-  ];
-
+  
   useEffect(() => {
     const filterData = data?.filter((row) =>
       tableColumns?.some((col) => {
